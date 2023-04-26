@@ -18,43 +18,6 @@ namespace Tema2.Controllers
             _userService = userService;
         }
 
-        [HttpPost("/register")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Register(RegisterDto payload)
-        {
-            bool isUnique = await _userService.CheckUsername(payload.Username);
-
-            if (!isUnique)
-            {
-                return BadRequest("Username is already used!");
-            }
-
-            bool result = await _userService.RegisterUser(payload);
-
-            if (!result)
-            {
-                return BadRequest("Register failed!");
-            }
-
-            return Ok();
-        }
-
-        [HttpPost("/login")]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login(LoginDto payload)
-        {
-            var jwtToken = await _userService.ValidateUser(payload);
-
-            if (jwtToken == "" || jwtToken == null)
-            {
-                return BadRequest("Wrong credentials.");
-            }
-            else
-            {
-                return Ok(new { token = jwtToken });
-            }
-        }
-
         [HttpGet("test-auth")]
         public IActionResult TestLogin()
         {
@@ -97,6 +60,43 @@ namespace Tema2.Controllers
                 return BadRequest("Error in getting users!");
             }
             return Ok(result);
+        }
+
+        [HttpPost("/register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Register(RegisterDto payload)
+        {
+            bool isUnique = await _userService.CheckUsername(payload.Username);
+
+            if (!isUnique)
+            {
+                return BadRequest("Username is already used!");
+            }
+
+            bool result = await _userService.RegisterUser(payload);
+
+            if (!result)
+            {
+                return BadRequest("Register failed!");
+            }
+
+            return Ok();
+        }
+
+        [HttpPost("/login")]
+        [AllowAnonymous]
+        public async Task<IActionResult> Login(LoginDto payload)
+        {
+            var jwtToken = await _userService.ValidateUser(payload);
+
+            if (jwtToken == "" || jwtToken == null)
+            {
+                return BadRequest("Wrong credentials.");
+            }
+            else
+            {
+                return Ok(new { token = jwtToken });
+            }
         }
     }
 }

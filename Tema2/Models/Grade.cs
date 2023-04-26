@@ -13,7 +13,7 @@ public partial class Grade
 
     public double Value { get; set; }
 
-    public virtual CourseType? CourseType { get; set; } 
+    public virtual CourseType CourseType { get; set; } = null!;
 
-    public virtual Student? Student { get; set; } 
+    public virtual Student Student { get; set; } = null!;
 }

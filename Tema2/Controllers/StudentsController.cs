@@ -41,31 +41,6 @@ namespace Tema2.Controllers
             return Ok(result);
         }
 
-        [HttpPatch("edit-name")]
-        public async Task<ActionResult<bool>> GetById([FromBody] StudentUpdateDto studentUpdateModel)
-        {
-            Student student = new Student() { 
-                FirstName = studentUpdateModel.FirstName, 
-                LastName = studentUpdateModel.LastName 
-            };
-
-            var result = await _studentService.UpdateStudent(studentUpdateModel.Id, student);
-            
-            if (!result)
-            {
-                return BadRequest("Student could not be updated.");
-            }
-
-            return result;
-        }
-
-        [HttpPost("grades-by-course")]
-        public async Task<ActionResult<GradesByStudent>> Get_CourseGrades_ByStudentId([FromBody] StudentGradesRequest request)
-        {
-            var result = await _studentService.GetCourseGradesForStudent(request.StudentId, request.CourseType);
-            return Ok(result);
-        }
-
         [HttpGet("{classId}/class-students")]
         public async Task<IActionResult> GetClassStudents([FromRoute] int classId)
         {
@@ -87,11 +62,11 @@ namespace Tema2.Controllers
         public async Task<IActionResult> GetAllGradesForStudent()
         {
             string? accessToken = Request.Headers[HeaderNames.Authorization];
-            if(accessToken == null)
+            if (accessToken == null)
             {
                 return BadRequest("Token is null");
             }
-            var results =  await _studentService.GetAllGradesForStudent(accessToken);
+            var results = await _studentService.GetAllGradesForStudent(accessToken);
 
             return Ok(results);
         }
@@ -109,5 +84,31 @@ namespace Tema2.Controllers
 
             return Ok(results);
         }
+
+        [HttpPost("grades-by-course")]
+        public async Task<ActionResult<GradesByStudent>> Get_CourseGrades_ByStudentId([FromBody] StudentGradesRequest request)
+        {
+            var result = await _studentService.GetCourseGradesForStudent(request.StudentId, request.CourseType);
+            return Ok(result);
+        }
+
+        [HttpPatch("edit-name")]
+        public async Task<ActionResult<bool>> GetById([FromBody] StudentUpdateDto studentUpdateModel)
+        {
+            Student student = new Student() { 
+                FirstName = studentUpdateModel.FirstName, 
+                LastName = studentUpdateModel.LastName 
+            };
+
+            var result = await _studentService.UpdateStudent(studentUpdateModel.Id, student);
+            
+            if (!result)
+            {
+                return BadRequest("Student could not be updated.");
+            }
+
+            return result;
+        }
+
     }
 }
